@@ -1,5 +1,5 @@
 var mongoose=require('mongoose');
-mongoose.connect("mongodb://localhost/shop-app",{ useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/shop-app"||process.env.DATABASEURL,{ useNewUrlParser: true });
 
 var productSchema=new mongoose.Schema({
     'title':String,
