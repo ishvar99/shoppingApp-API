@@ -8,6 +8,6 @@ app.get('/',(req,res)=>{
 	res.sendFile('views/index.html',{root:__dirname});
 });
 app.use('/api/shop',shopRoutes);
-app.listen('3000'||process.env.PORT,process.env.IP,()=>{
+app.listen(process.env.PORT||'3000',process.env.IP,()=>{
 console.log('Server Started!')
 })
