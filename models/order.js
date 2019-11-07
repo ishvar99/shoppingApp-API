@@ -2,7 +2,7 @@ var mongoose=require('mongoose');
 
 var orderSchema=new mongoose.Schema(
 {
-	'totalAmount':Number,
+	'amount':Number,
 	'products':[
 	{
 		'title':String,
@@ -10,7 +10,7 @@ var orderSchema=new mongoose.Schema(
 		'quantity':Number
 	}
 	],
-	// 'date':Date
+	'date':Date
 });
 
 

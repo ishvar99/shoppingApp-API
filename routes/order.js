@@ -10,6 +10,7 @@ Order.find({})
 });
 })
 .post((req,res)=>{
+	console.log(req.body)
 	Order.create(req.body)
 	.then((order)=>{
 		console.log(order);
