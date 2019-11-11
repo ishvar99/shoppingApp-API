@@ -2,28 +2,47 @@ var express=require('express');
 var router=express.Router();
 var User=require('../models/users.js');
 var _=require('lodash')
-router.route('/')
-.get((req,res)=>{
+router.get('/',(req,res)=>{
 	User.find({})
 	.then((users)=>{
         res.json(users);
 	})
 })
-.post((req,res)=>{
+router.post('/signup',(req,res)=>{
 	var body=_.pick(req.body,['email','password'])
 	User.create(body)
 	.then((user)=>{
         user.generateAuthToken()
         .then(()=>{
-        	res.header({'auth':user.tokens[0].token}).send(user);
+        	res.header('x-auth',token).json({'id':user._id,'token':user.tokens[0].token});
         })
          .catch((err)=>{
          	res.status(401);
          })
 	})
+	.catch((err)=>{
+		res.json(err)
+	})
+});
+router.post('/login',(req,res)=>{
+	var body=_.pick(req.body,['email','password'])
+	User.findByCredentials(body.email,body.password)
+	.then(function(user){
+		if(!user)
+			return;
+		else{
+           user.generateAuthToken()
+           .then(()=>{
+           	res.header('x-auth',user.tokens[0].toke).json({'id':user._id,'token':user.tokens[0].token})
+           })
+		}
+	})
+	.catch((err)=>{
+		res.json({'errmsg':err})
+	})
 })
 router.get('/me',(req,res)=>{
-	var token=req.header('auth')
+	var token=req.header('x-auth')
 	User.findByToken(token)
 	.then((user)=>{
 		res.send(user);

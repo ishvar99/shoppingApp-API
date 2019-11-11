@@ -1,8 +1,8 @@
 var express=require('express');
 var Product=require('../models/product.js');
+var authenticate=require('../middleware/authenticate.js')
 var router=express.Router();
-router.route('/')
-.get((req,res)=>{
+router.get('/',authenticate,(req,res)=>{
  Product.find({})
  .then((products)=>{
       res.json(products);
@@ -11,8 +11,7 @@ router.route('/')
  	res.json({"error":err})
  })
 })
-.post((req,res)=>{
-	console.log(req.body);
+router.post('/',authenticate,(req,res)=>{
    Product.create(
    req.body
    ).then((product)=>{
@@ -22,7 +21,7 @@ router.route('/')
    	console.log(err)
    })
 })
-router.patch('/:id',(req,res)=>{
+router.patch('/:id',authenticate,(req,res)=>{
     Product.findOneAndUpdate({_id:req.params.id},req.body,{new:true})
     .then((foundProduct)=>{
     	res.json(foundProduct)
@@ -31,7 +30,7 @@ router.patch('/:id',(req,res)=>{
     	console.log(err)
     })
 });
-router.delete('/:id',(req,res)=>{
+router.delete('/:id',authenticate,(req,res)=>{
 	Product.findOneAndRemove({_id:req.params.id})
 	.catch((err)=>{
 		console.log(err)
